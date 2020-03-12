@@ -1,0 +1,43 @@
+#include <Adafruit_GFX.h>      //Libraries for the OLED and BMP280
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_BMP280.h>
+
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define OLED_RESET    LED_BUILTIN // Reset pin # (or -1 if sharing Arduino reset pin)
+#define Gate 9
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET); //Declaring the display name (display)
+Adafruit_BMP280 bmp;
+
+void setup() {
+  bmp.begin();                                //Start the bmp
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); //Start the OLED display
+  display.clearDisplay();
+  display.display();
+  display.setTextColor(WHITE);
+  display.setTextSize(3);
+  
+  pinMode (Gate, OUTPUT);
+  digitalWrite(Gate, LOW);
+}
+
+void loop() {
+
+  display.clearDisplay();
+  float T = bmp.readTemperature();           //Read temperature in C
+  Serial.println(T);                                        //If you don't know it just modify it until you get the altitude of your place
+
+  display.setCursor(0, 10);                  //Oled display, just playing with text size and cursor to get the display you want
+  display.setTextColor(WHITE);
+  display.setTextSize(2);
+  display.print("Temp");
+
+  display.setCursor(0, 38);
+  display.print(T, 1);
+  display.setCursor(50, 37);
+  display.setTextSize(1);
+  display.print("C");
+  display.display();
+}
